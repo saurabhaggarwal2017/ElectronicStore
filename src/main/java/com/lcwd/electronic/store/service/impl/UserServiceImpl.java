@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
 //                .imageName(userDto.getImageName())
 //                .build();
 
-        User user = mapper.map(userDto, User.class);
+        mapper.map(userDto, User.class)
         return user;
     }
 
