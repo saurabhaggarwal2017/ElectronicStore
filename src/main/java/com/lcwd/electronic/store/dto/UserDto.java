@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.dto;
 
+import com.lcwd.electronic.store.validate.ImageNameValid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -21,7 +22,7 @@ public class UserDto {
 
     //    @Email(message = "Invalid email!!")
     @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$" , message = "Invalid email!")
+            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Invalid email!")
     private String email;
 
     @NotBlank(message = "password is required!!")
@@ -30,5 +31,7 @@ public class UserDto {
     private String gender;
     @NotBlank(message = "write something!!")
     private String about;
+
+    @ImageNameValid
     private String imageName;
 }
