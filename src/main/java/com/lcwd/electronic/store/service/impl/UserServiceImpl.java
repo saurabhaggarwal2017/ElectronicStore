@@ -4,6 +4,7 @@ import com.lcwd.electronic.store.dto.PageableResponse;
 import com.lcwd.electronic.store.dto.UserDto;
 import com.lcwd.electronic.store.entities.User;
 import com.lcwd.electronic.store.exceptions.ResourceNotFoundException;
+import com.lcwd.electronic.store.helper.Helper;
 import com.lcwd.electronic.store.repositories.UserRepository;
 import com.lcwd.electronic.store.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -71,19 +72,8 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
 
         Page<User> pages = userRepository.findAll(pageable);
-        List<User> users = pages.getContent();
+        PageableResponse<UserDto> response = Helper.getPageableResponse(pages, UserDto.class);
 
-        List<UserDto> userDtos = users.stream().map(user -> entityToDto(user)).collect(Collectors.toList());
-
-        PageableResponse<UserDto> response = new PageableResponse<>();
-        response.setContent(userDtos);
-        response.setPageNumber(pages.getNumber());
-        response.setPageSize(pages.getSize());
-        response.setTotalElements(pages.getTotalElements());
-        response.setTotalPages(pages.getTotalPages());
-        response.setNumberOfElementsInPage(pages.getNumberOfElements());
-        response.setLastPage(pages.isLast());
-        
         return response;
     }
 
@@ -108,32 +98,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private User dtoToEntity(UserDto userDto) {
-        // mapping by own
-//        User user = User.builder()
-//                .userId(userDto.getUserId())
-//                .name(userDto.getName())
-//                .email(userDto.getEmail())
-//                .password(userDto.getPassword())
-//                .gender(userDto.getGender())
-//                .about(userDto.getGender())
-//                .imageName(userDto.getImageName())
-//                .build();
-
         User user = mapper.map(userDto, User.class);
         return user;
     }
 
     private UserDto entityToDto(User user) {
-        // mapping by own
-//        UserDto userDto = UserDto.builder()
-//                .userId(user.getUserId())
-//                .name(user.getName())
-//                .email(user.getEmail())
-//                .password(user.getPassword())
-//                .gender(user.getGender())
-//                .about(user.getAbout())
-//                .imageName(user.getImageName())
-//                .build();
         UserDto userDto = mapper.map(user, UserDto.class);
         return userDto;
     }
