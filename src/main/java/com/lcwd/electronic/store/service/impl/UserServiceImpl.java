@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.service.impl;
 
+import com.lcwd.electronic.store.dto.PageableResponse;
 import com.lcwd.electronic.store.dto.UserDto;
 import com.lcwd.electronic.store.entities.User;
 import com.lcwd.electronic.store.exceptions.ResourceNotFoundException;
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUser(int pageNumber, int pageSize, String sortBy, String sortDir) {
+    public PageableResponse<UserDto> getAllUser(int pageNumber, int pageSize, String sortBy, String sortDir) {
 
         // ternary operator
         Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(Sort.Direction.DESC, sortBy) : Sort.by(Sort.Direction.ASC, sortBy);
@@ -73,7 +74,17 @@ public class UserServiceImpl implements UserService {
         List<User> users = pages.getContent();
 
         List<UserDto> userDtos = users.stream().map(user -> entityToDto(user)).collect(Collectors.toList());
-        return userDtos;
+
+        PageableResponse<UserDto> response = new PageableResponse<>();
+        response.setContent(userDtos);
+        response.setPageNumber(pages.getNumber());
+        response.setPageSize(pages.getSize());
+        response.setTotalElements(pages.getTotalElements());
+        response.setTotalPages(pages.getTotalPages());
+        response.setNumberOfElementsInPage(pages.getNumberOfElements());
+        response.setLastPage(pages.isLast());
+        
+        return response;
     }
 
     @Override
