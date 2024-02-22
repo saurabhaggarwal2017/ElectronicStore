@@ -9,13 +9,21 @@ import com.lcwd.electronic.store.repositories.UserRepository;
 import com.lcwd.electronic.store.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.bytebuddy.matcher.MethodSortMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -25,9 +33,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private ModelMapper mapper;
+    @Value("${user.profile.image.path}")
+    private String imagePath;
+
+    Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -61,7 +72,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found of id " + userId));
+        // delete user Image when user delete.
+        String fullPathImageName = imagePath + user.getImageName();
+        Path path = Paths.get(fullPathImageName);
+        try {
+            Files.delete(path);
+        } catch (NoSuchFileException e) {
+            logger.info("No file Found!!");
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         userRepository.delete(user);
+
     }
 
     @Override
