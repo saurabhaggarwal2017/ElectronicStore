@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.controllers;
 
+import com.lcwd.electronic.store.config.ImagePath;
 import com.lcwd.electronic.store.dto.ApiResponseMessage;
 import com.lcwd.electronic.store.dto.ImageResponse;
 import com.lcwd.electronic.store.dto.PageableResponse;
@@ -31,9 +32,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private FileService fileService;
-
-    @Value("${user.profile.image.path}")
-    private String imageUploadPath;
+    @Autowired
+    private ImagePath imagePath;
 
     // create
     @PostMapping
@@ -94,7 +94,7 @@ public class UserController {
     public ResponseEntity<ImageResponse> uploadUserImage(
             @RequestParam("userImage") MultipartFile userImage,
             @PathVariable("userId") String userId) throws IOException {
-        String imageName = fileService.uploadFile(userImage, imageUploadPath);
+        String imageName = fileService.uploadFile(userImage, imagePath.getUserImagesPath());
 
         // save into user profile
         UserDto user = userService.getUserById(userId);
@@ -109,7 +109,7 @@ public class UserController {
     @GetMapping("/image/{userId}")
     public void serveUserImage(@PathVariable String userId, HttpServletResponse response) throws IOException {
         UserDto user = userService.getUserById(userId);
-        InputStream resource = fileService.getResource(imageUploadPath, user.getImageName());
+        InputStream resource = fileService.getResource(imagePath.getUserImagesPath(), user.getImageName());
 
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(resource,response.getOutputStream());

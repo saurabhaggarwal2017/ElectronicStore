@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.service.impl;
 
+import com.lcwd.electronic.store.config.ImagePath;
 import com.lcwd.electronic.store.dto.PageableResponse;
 import com.lcwd.electronic.store.dto.UserDto;
 import com.lcwd.electronic.store.entities.User;
@@ -35,8 +36,8 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private ModelMapper mapper;
-    @Value("${user.profile.image.path}")
-    private String imagePath;
+    @Autowired
+    private ImagePath imagePath;
 
     Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -73,13 +74,13 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found of id " + userId));
         // delete user Image when user delete.
-        String fullPathImageName = imagePath + user.getImageName();
+        String fullPathImageName = imagePath.getUserImagesPath() + user.getImageName();
         Path path = Paths.get(fullPathImageName);
         try {
             Files.delete(path);
         } catch (NoSuchFileException e) {
-            logger.info("No file Found!!");
-            e.printStackTrace();
+            logger.error("No file Found!! : "+fullPathImageName);
+//            e.printStackTrace();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

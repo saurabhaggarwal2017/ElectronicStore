@@ -11,7 +11,7 @@ public class ImageNameValidator implements ConstraintValidator<ImageNameValid,St
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        logger.info("message from isValid method value : {}",value);
+//        logger.info("message from isValid method value : {}",value);
         if(value.isBlank()){
             return false;
         }

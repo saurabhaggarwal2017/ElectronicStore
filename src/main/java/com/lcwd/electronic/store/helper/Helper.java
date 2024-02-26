@@ -10,20 +10,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Helper {
-    public static <U,V>PageableResponse<V> getPageableResponse(Page<U>pages,Class<V> dto){
+    public static <U, V> PageableResponse<V> getPageableResponse(Page<U> pages, Class<V> dto) {
 
         List<U> entities = pages.getContent();
 
-        List<V> dtoList = entities.stream().map(entity -> new ModelMapper().map(entity,dto)).collect(Collectors.toList());
+        List<V> dtoList = entities.stream().map(entity -> new ModelMapper().map(entity, dto)).collect(Collectors.toList());
 
         PageableResponse<V> response = new PageableResponse<>();
-        response.setContent(dtoList);
         response.setPageNumber(pages.getNumber());
         response.setPageSize(pages.getSize());
         response.setTotalElements(pages.getTotalElements());
         response.setTotalPages(pages.getTotalPages());
         response.setNumberOfElementsInPage(pages.getNumberOfElements());
         response.setLastPage(pages.isLast());
+        response.setContent(dtoList);
 
         return response;
     }
