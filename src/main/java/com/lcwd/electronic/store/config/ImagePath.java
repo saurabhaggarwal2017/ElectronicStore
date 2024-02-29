@@ -13,4 +13,5 @@ import org.springframework.stereotype.Component;
 public class ImagePath {
     private String userImagesPath;
     private String categoryImagesPath;
+    private String productImagesPath;
 }
