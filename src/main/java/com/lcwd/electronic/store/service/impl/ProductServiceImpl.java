@@ -13,9 +13,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.UUID;
 
+@Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -27,6 +30,9 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto createProduct(ProductDto productDto) {
         String productId = UUID.randomUUID().toString();
         productDto.setProductId(productId);
+
+        // add date
+        productDto.setProductAddedDate(new Date());
 
         Product product = mapper.map(productDto, Product.class);
         Product savedProduct = productRepository.save(product);
