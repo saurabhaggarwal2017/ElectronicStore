@@ -9,6 +9,6 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     //custom finder methods
     Page<Product> findByTitleContaining(String keyword, Pageable pageable);
 
-    Page<Product> findByIsActiveTrue(Pageable pageable);
+    Page<Product> findByActiveProductTrue(Pageable pageable);
 
 }

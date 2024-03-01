@@ -26,7 +26,7 @@ public class Product {
     private int price;
     private int quantity;
     private Date productAddedDate;
-    private boolean isActive;
+    private boolean activeProduct;
     private boolean stock;
     private String productImage;
 

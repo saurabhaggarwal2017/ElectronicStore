@@ -25,7 +25,7 @@ public class ProductDto {
     private int price;
     private int quantity;
     private Date productAddedDate;
-    private boolean isActive;
+    private boolean activeProduct;
     private boolean stock;
     @NotBlank(message = "Don't keep product-Image blank!")
     private String productImage;

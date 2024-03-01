@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.service.impl;
 
+import com.lcwd.electronic.store.config.ImagePath;
 import com.lcwd.electronic.store.dto.PageableResponse;
 import com.lcwd.electronic.store.dto.ProductDto;
 import com.lcwd.electronic.store.entities.Product;
@@ -15,6 +16,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.UUID;
 
@@ -25,6 +31,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private ImagePath imagePath;
 
     @Override
     public ProductDto createProduct(ProductDto productDto) {
@@ -49,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
         product.setBrand(productDto.getBrand());
         product.setProductImage(productDto.getProductImage());
         product.setPrice(productDto.getPrice());
-        product.setActive(productDto.isActive());
+        product.setActiveProduct(productDto.isActiveProduct());
         product.setStock(productDto.isStock());
         product.setQuantity(productDto.getQuantity());
 
@@ -61,6 +69,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(String productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found of given id!!"));
+        // delete image
+        String fullPathWithImage = imagePath.getProductImagesPath() + product.getProductImage();
+        Path path = Paths.get(fullPathWithImage);
+        try {
+            Files.delete(path);
+        }catch (NoSuchFileException e){
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         productRepository.delete(product);
     }
 
@@ -86,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
         Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(Sort.Direction.DESC, sortBy) : Sort.by(Sort.Direction.ASC, sortBy);
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
 
-        Page<Product> allProducts = productRepository.findByIsActiveTrue(pageable);
+        Page<Product> allProducts = productRepository.findByActiveProductTrue(pageable);
 
         PageableResponse<ProductDto> pageableResponse = Helper.getPageableResponse(allProducts, ProductDto.class);
         return pageableResponse;
