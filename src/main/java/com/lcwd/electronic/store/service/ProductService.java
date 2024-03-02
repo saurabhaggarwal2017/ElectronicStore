@@ -7,8 +7,12 @@ public interface ProductService {
     //create
     ProductDto createProduct(ProductDto productDto);
 
+    ProductDto createProductWithCategory(String categoryId, ProductDto productDto);
+
     //update
     ProductDto updateProduct(ProductDto productDto, String productId);
+
+    ProductDto updateProductCategory(String productId, String categoryId);
 
     //delete
     void deleteProduct(String productId);
@@ -24,4 +28,6 @@ public interface ProductService {
 
     //search product by title
     PageableResponse<ProductDto> searchProduct(String keyword, int pageNumber, int pageSize, String sortBy, String sortDir);
+
+    PageableResponse<ProductDto> getProductsByCategory(String categoryId, int pageNumber, int pageSize, String sortBy, String sortDir);
 }

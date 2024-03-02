@@ -95,6 +95,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto getSingleCategory(String categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category of id " + categoryId + " not found!"));
+        category.getProducts().stream().forEach(product -> logger.info(" product : {}", product));
         return mapper.map(category, CategoryDto.class);
 
     }

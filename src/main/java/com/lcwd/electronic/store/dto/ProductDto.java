@@ -16,7 +16,7 @@ public class ProductDto {
 
     private String productId;
     @NotBlank(message = "Don't keep title blank!")
-    @Size(max = 80,message = "Length is above 80 character!")
+    @Size(max = 80, message = "Length is above 80 character!")
     private String title;
     @NotBlank(message = "Don't keep description blank!")
     private String description;
@@ -29,4 +29,7 @@ public class ProductDto {
     private boolean stock;
     @NotBlank(message = "Don't keep product-Image blank!")
     private String productImage;
+
+    private CategoryDto category;
+
 }

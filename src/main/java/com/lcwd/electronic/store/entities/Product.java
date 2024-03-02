@@ -1,9 +1,6 @@
 package com.lcwd.electronic.store.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
@@ -12,6 +9,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "products")
 public class Product {
@@ -29,5 +27,10 @@ public class Product {
     private boolean activeProduct;
     private boolean stock;
     private String productImage;
+
+    // mapping
+    @ManyToOne(fetch =FetchType.EAGER)
+    @JoinColumn(name = "categoryId")
+    private Category category;
 
 }
