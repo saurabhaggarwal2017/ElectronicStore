@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,5 +29,5 @@ public class Category {
 
     // mapping
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    List<Product> products;
+    Set<Product> products = new LinkedHashSet<>();
 }
