@@ -12,12 +12,14 @@ import com.lcwd.electronic.store.repositories.CartRepository;
 import com.lcwd.electronic.store.repositories.OrderRepository;
 import com.lcwd.electronic.store.repositories.UserRepository;
 import com.lcwd.electronic.store.service.OrderService;
+import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Set;
@@ -25,6 +27,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Service
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private UserRepository userRepository;

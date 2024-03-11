@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
@@ -9,6 +10,7 @@ import lombok.*;
 @Builder
 @ToString
 public class UpdateOrderRequest {
+    @NotBlank(message = "order id should not be blank!")
     private String oderId;
     private String orderStatus = "Pending";
     private String paymentStatus = "NotPaid";
