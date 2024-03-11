@@ -13,6 +13,7 @@ import com.lcwd.electronic.store.repositories.OrderRepository;
 import com.lcwd.electronic.store.repositories.UserRepository;
 import com.lcwd.electronic.store.service.OrderService;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
     @Autowired
@@ -88,8 +90,10 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("user not found!!"));
         Set<Order> orders = user.getOrders();
 
-        Order order1 = orders.stream().filter(order -> order.getOrderId() == orderId).findAny().orElseThrow(() -> new ResourceNotFoundException("order not found!!"));
+        log.info("Orders size :: {} ",orders.size());
+        Order order1 = orders.stream().filter(order -> order.getOrderId().equals(orderId)).findAny().orElseThrow(() -> new ResourceNotFoundException("order not found!!"));
         orders.remove(order1);
+        log.info("Orders size :: {} ",orders.size());
         userRepository.save(user);
     }
 
@@ -117,7 +121,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto updateOrder(UpdateOrderRequest request) {
-        Order order = orderRepository.findById(request.getOderId()).orElseThrow(() -> new ResourceNotFoundException("order not found!!"));
+        Order order = orderRepository.findById(request.getOrderId()).orElseThrow(() -> new ResourceNotFoundException("order not found!!"));
         order.setBillingAddress(request.getBillingAddress());
         order.setBillingName(request.getBillingName());
         order.setBillingPhone(request.getBillingPhone());

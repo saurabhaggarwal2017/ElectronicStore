@@ -11,7 +11,7 @@ import lombok.*;
 @ToString
 public class UpdateOrderRequest {
     @NotBlank(message = "order id should not be blank!")
-    private String oderId;
+    private String orderId;
     private String orderStatus = "Pending";
     private String paymentStatus = "NotPaid";
 
