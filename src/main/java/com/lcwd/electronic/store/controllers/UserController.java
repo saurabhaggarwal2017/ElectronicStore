@@ -112,7 +112,12 @@ public class UserController {
         InputStream resource = fileService.getResource(imagePath.getUserImagesPath(), user.getImageName());
 
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
-        StreamUtils.copy(resource,response.getOutputStream());
+        StreamUtils.copy(resource, response.getOutputStream());
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<String> testApi() {
+        return new ResponseEntity<>("testing..", HttpStatus.OK);
     }
 }
 

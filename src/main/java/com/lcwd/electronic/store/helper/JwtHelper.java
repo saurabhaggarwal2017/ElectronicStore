@@ -3,14 +3,17 @@ package com.lcwd.electronic.store.helper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.function.Function;
 
+@Component
 public class JwtHelper {
 
     private final String secretKey = "dhiwmaimandymceu5d6s7s9s2ss7ss11sd7c2x5s8ss1s78s9w5rfgr8i4m1n1b2c8v8";
@@ -45,7 +48,7 @@ public class JwtHelper {
                 .subject(userName)
                 .expiration(new Date(System.currentTimeMillis() + expireDate))
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .signWith(getSecretKey())
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
                 .compact();
         return token;
     }

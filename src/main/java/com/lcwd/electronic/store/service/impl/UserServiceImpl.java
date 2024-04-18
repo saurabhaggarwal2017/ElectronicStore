@@ -4,9 +4,11 @@ import com.lcwd.electronic.store.config.ImagePath;
 import com.lcwd.electronic.store.dto.PageableResponse;
 import com.lcwd.electronic.store.dto.UserDto;
 import com.lcwd.electronic.store.entities.User;
+import com.lcwd.electronic.store.entities.UserRoles;
 import com.lcwd.electronic.store.exceptions.ResourceNotFoundException;
 import com.lcwd.electronic.store.helper.Helper;
 import com.lcwd.electronic.store.repositories.UserRepository;
+import com.lcwd.electronic.store.repositories.UserRoleRepository;
 import com.lcwd.electronic.store.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.bytebuddy.matcher.MethodSortMatcher;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -26,6 +29,8 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -38,6 +43,10 @@ public class UserServiceImpl implements UserService {
     private ModelMapper mapper;
     @Autowired
     private ImagePath imagePath;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
     Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -45,8 +54,13 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
         String userId = UUID.randomUUID().toString();
         userDto.setUserId(userId);
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         User user = dtoToEntity(userDto);
+
+        UserRoles roleNormal = userRoleRepository.findByRoleName("Role_Normal").get();
+        Set<UserRoles> roles = user.getRoles();
+        roles.add(roleNormal);
         User savedUser = userRepository.save(user);
         UserDto updatedUserDto = entityToDto(savedUser);
 
@@ -79,7 +93,7 @@ public class UserServiceImpl implements UserService {
         try {
             Files.delete(path);
         } catch (NoSuchFileException e) {
-            logger.error("No file Found!! : "+fullPathImageName);
+            logger.error("No file Found!! : " + fullPathImageName);
 //            e.printStackTrace();
         } catch (IOException e) {
             throw new RuntimeException(e);

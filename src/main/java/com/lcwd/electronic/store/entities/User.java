@@ -3,6 +3,7 @@ package com.lcwd.electronic.store.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -37,5 +38,8 @@ public class User {
     private String imageName;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
-    Set<Order> orders = new LinkedHashSet<>();
+    private Set<Order> orders = new LinkedHashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private Set<UserRoles> roles = new HashSet<>();
 }
